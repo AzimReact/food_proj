@@ -98,8 +98,48 @@ window.addEventListener('DOMContentLoaded', () => {
         if(timeInterval <= 0) {
             clearInterval(timeInterval)
         }
+        console.log('timer');
     }
 
     setClock('.timer', deadline)
+
+
+    // Modal
+
+    const btnsOpen = document.querySelectorAll('[data-modal]'),
+        modal = document.querySelector('.modal'), 
+        btnClose = document.querySelector('[data-close]')
+
+
+    btnsOpen.forEach( item => {
+        item.addEventListener('click', () => {
+            // modal.style.display = 'block'
+            modal.classList.add('show')
+            modal.classList.remove('hide')
+            document.body.style.overflow = 'hidden'
+        })
+    })
+
+    function closeModal() {
+        modal.classList.add('hide')
+        modal.classList.remove('show')
+        document.body.style.overflow = ''
+    }
+
+    btnClose.addEventListener('click', closeModal)
+
+    modal.addEventListener('click', (e) => {
+        // console.log(e.target);
+        if (e.target === modal) {
+            closeModal()
+        }
+    })
+
+    // взаимодействие с клавишами на клавиатуре - event.code
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Escape' && modal.classList.contains('show')) {
+            closeModal()
+        }
+    })
 })
 
