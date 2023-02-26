@@ -50,7 +50,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Timer
 
-    const deadline = '2023-02-26'
+    const deadline = '2023-02-29'
 
     function getTimeRemaining(endTime) {
         const t = Date.parse(deadline) - Date.parse(new Date()),
@@ -152,7 +152,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     })
 
-    const modalTimerId = setTimeout(openModal, 1500)
+    // const modalTimerId = setTimeout(openModal, 1500)
 
     function showModalByScroll(){
         if(window.pageXOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
@@ -162,5 +162,76 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     window.addEventListener('scroll', showModalByScroll)
-})
+
+    // Use Classes for cards
+
+    class MenuCard {
+        constructor(src, alt, title, descr, price, parentSelector ) {
+            this.src = src;
+            this.alt = alt;
+            this. title = title;
+            this.descr = descr;
+            this.price = price;
+            this.parent = document.querySelector(parentSelector);
+            this.transfer = 88,5;
+            this.changeToSoms();
+        }
+
+        changeToSoms() {
+            this.price * this.transfer
+        }
+
+        render() {
+            const card = document.createElement('div')
+            card.innerHTML = `
+                <div class="menu__item">
+                    <img src=${this.src} alt=${this.alt}>
+                    <h3 class="menu__item-subtitle">${this.title}</h3>
+                    <div class="menu__item-descr">${this.descr}</div>
+                    <div class="menu__item-divider"></div>
+                    <div class="menu__item-price">
+                        <div class="menu__item-cost">Цена:</div>
+                        <div class="menu__item-total"><span>${this.price}</span> сом/день</div>
+                    </div>
+                </div>
+            `;
+
+            this.parent.append(card)
+        };
+    };
+
+    // 1-ый классический способ
+    const firstCard = new MenuCard(
+        "img/tabs/vegy.jpg",
+        "vegy",
+        'Меню "Фитнес"',
+        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+        229,
+        '.menu .container'
+    );
+    firstCard.render()
+
+    // 2-ой способ, если нам нужно один раз отрендерить данные дальше они нам не нужны для хранения
+    new MenuCard(
+        "img/tabs/elite.jpg",
+        "elite",
+        'Меню “Премиум”',
+        'Меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
+        550,
+        '.menu .container'
+    ).render();
+
+    new MenuCard(
+        "img/tabs/post.jpg",
+        "post",
+        'Меню "Постное"',
+        'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков. ',
+        430,
+        '.menu .container'
+    ).render();
+
+});
+
+
+
 
