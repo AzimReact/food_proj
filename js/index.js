@@ -106,7 +106,7 @@ window.addEventListener('DOMContentLoaded', () => {
         if(timeInterval <= 0) {
             clearInterval(timeInterval)
         }
-        console.log('timer');
+        // console.log('timer');
     }
 
     setClock('.timer', deadline)
@@ -236,6 +236,72 @@ window.addEventListener('DOMContentLoaded', () => {
         '.menu .container'
     ).render();
         
+
+    // Forms - собрать данные и отправить на сервер
+
+    const forms = document.querySelectorAll('form');
+
+    const message = {
+        loading: 'Загрузка',
+        succes: 'Спасибо! Скоро мы с вами свяжемся',
+        failure: 'Что-то пошло не так...'
+    }
+
+    forms.forEach(item => {
+        postData(item);
+    });
+
+    function postData(form) {
+        form.addEventListener('submit', (e) => {
+
+            // console.log(e);
+            // alert('sdf') 
+            e.preventDefault();
+
+            const statusMessage = document.createElement('div');
+            // statusMessage.classList.add('status'); // если есть класс статус то он добавиться
+            statusMessage.textContent = message.loading;
+            form.append(statusMessage);
+
+
+            const request = new XMLHttpRequest();
+            request.open('POST', 'server.php');
+
+            request.setRequestHeader('Content-type', 'application/json');
+            const formData = new FormData(form); // объект formData - который мы сформировали, но можно отправить в JSON формате, разберем позже
+
+
+            const object = {
+
+            } // создал объект, чтобы туда закинуть formData
+
+            formData.forEach(function (value, key) {
+                object[key] = value
+            })
+
+            const json = JSON.stringify(object)
+
+            request.send(json);
+
+            request.addEventListener('load', () => {
+                if ( request.status === 200 ) {
+                    // console.log(request.response); 
+                    statusMessage.textContent = message.succes;
+                    form.reset(); // валидация. Или можно просто перебрать все инпуты и почистить их value
+                    setTimeout(() => {
+                        statusMessage.remove()
+                    }, 2000)
+                } else {
+                    statusMessage.textContent = message.failure;
+
+                };
+
+            });
+
+
+        });
+    };
+
 });
 
 
