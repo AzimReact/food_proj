@@ -115,15 +115,13 @@ window.addEventListener('DOMContentLoaded', () => {
     // Modal
 
     const btnsOpen = document.querySelectorAll('[data-modal]'),
-        modal = document.querySelector('.modal'), 
-        btnClose = document.querySelector('[data-close]')
+        modal = document.querySelector('.modal');
 
 
     function openModal() {
         modal.classList.add('show')
         modal.classList.remove('hide')
         document.body.style.overflow = 'hidden'
-        clearInterval(modalTimerId)
     }
 
     btnsOpen.forEach( item => {
@@ -136,11 +134,8 @@ window.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = ''
     }
 
-    btnClose.addEventListener('click', closeModal)
-
     modal.addEventListener('click', (e) => {
-        // console.log(e.target);
-        if (e.target === modal) {
+        if (e.target === modal || e.target.getAttribute('data-close') == '') {
             closeModal()
         }
     })
@@ -152,7 +147,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     })
 
-    // const modalTimerId = setTimeout(openModal, 1500)
+    const modalTimerId = setTimeout(openModal, 50000)
 
     function showModalByScroll(){
         if(window.pageXOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
@@ -242,7 +237,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const forms = document.querySelectorAll('form');
 
     const message = {
-        loading: 'Загрузка',
+        loading: 'img/form/spinner.svg',
         succes: 'Спасибо! Скоро мы с вами свяжемся',
         failure: 'Что-то пошло не так...'
     }
@@ -253,15 +248,16 @@ window.addEventListener('DOMContentLoaded', () => {
 
     function postData(form) {
         form.addEventListener('submit', (e) => {
-
-            // console.log(e);
-            // alert('sdf') 
             e.preventDefault();
 
-            const statusMessage = document.createElement('div');
-            // statusMessage.classList.add('status'); // если есть класс статус то он добавиться
-            statusMessage.textContent = message.loading;
-            form.append(statusMessage);
+            const statusMessage = document.createElement('img');
+            statusMessage.src = message.loading // если есть класс статус то он добавиться
+            statusMessage.style.cssText = `
+                display: block;
+                margin: 0 auto;
+            `;
+            // form.append(statusMessage);
+            form.insertAdjacentElement('afterend', statusMessage)
 
 
             const request = new XMLHttpRequest();
@@ -285,15 +281,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
             request.addEventListener('load', () => {
                 if ( request.status === 200 ) {
-                    // console.log(request.response); 
-                    statusMessage.textContent = message.succes;
+                    console.log(request.response); 
+                    showThanksModal(message.succes);
                     form.reset(); // валидация. Или можно просто перебрать все инпуты и почистить их value
-                    setTimeout(() => {
-                        statusMessage.remove()
-                    }, 2000)
+                    statusMessage.remove() // удалили спиннер
                 } else {
-                    statusMessage.textContent = message.failure;
-
+                    showThanksModal(message.failure);
                 };
 
             });
@@ -301,6 +294,30 @@ window.addEventListener('DOMContentLoaded', () => {
 
         });
     };
+
+
+    function showThanksModal(message) {
+        const prevModalDialog = document.querySelector('.modal__dialog')
+
+        prevModalDialog.classList.add('hide')
+        openModal()
+
+        const thanksModal = document.createElement('div');
+        thanksModal.classList.add('modal__dialog');
+        thanksModal.innerHTML = `
+            <div class="modal__content">
+                <div class="modal__close" data-close>x</div>
+                <div class="modal__title">${message}</div>
+            </div>
+        `
+        document.querySelector('.modal').append(thanksModal);
+        setTimeout(() => {
+            thanksModal.remove();
+            prevModalDialog.classList.add('show')
+            prevModalDialog.classList.remove('hide')
+            closeModal();
+        }, 4000);
+    }
 
 });
 
