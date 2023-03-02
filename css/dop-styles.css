@@ -1,22 +1,57 @@
-.show{
-    display: block;
+.show {
+  display: block;
 }
 
-.hide{
-    display: none !important;
+.hide {
+  display: none !important;
 }
 
-.anime{
-    display: block;
-    animation-duration: 2s;
-    animation-name: anime;
+.anime {
+  display: block;
+  animation-duration: 2s;
+  animation-name: anime;
 }
 
 @keyframes anime {
-    0%{opacity: 0.5;}
-    100%{opacity: 1;}
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .calculating #gender:after {
-    background:url(../icon/switch.svg) center center/cover no-repeat ;
+  background: url(../icon/switch.svg) center center/cover no-repeat;
+}
+
+/* slider styles */
+
+.carousel-indicators {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 15;
+  display: flex;
+  justify-content: center;
+  margin-right: 15%;
+  margin-left: 15%;
+  list-style: none;
+}
+
+.dot {
+  box-sizing: content-box;
+  flex: 0 1 auto;
+  width: 30px;
+  height: 6px;
+  margin-right: 3px;
+  margin-left: 3px;
+  cursor: pointer;
+  background-color: #fff;
+  background-clip: padding-box;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  opacity: 0.5;
+  transition: opacity 0.6s ease;
 }
