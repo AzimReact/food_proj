@@ -256,41 +256,32 @@ window.addEventListener('DOMContentLoaded', () => {
                 display: block;
                 margin: 0 auto;
             `;
-            // form.append(statusMessage);
             form.insertAdjacentElement('afterend', statusMessage)
 
-
-            const request = new XMLHttpRequest();
-            request.open('POST', 'server.php');
-
-            request.setRequestHeader('Content-type', 'application/json');
             const formData = new FormData(form); // объект formData - который мы сформировали, но можно отправить в JSON формате, разберем позже
 
-
-            const object = {
-
-            } // создал объект, чтобы туда закинуть formData
-
-            formData.forEach(function (value, key) {
+            const object = {}; // создал объект, чтобы туда закинуть formData
+            
+            formData.forEach((value, key) => {
                 object[key] = value
-            })
-
-            const json = JSON.stringify(object)
-
-            request.send(json);
-
-            request.addEventListener('load', () => {
-                if ( request.status === 200 ) {
-                    console.log(request.response); 
-                    showThanksModal(message.succes);
-                    form.reset(); // валидация. Или можно просто перебрать все инпуты и почистить их value
-                    statusMessage.remove() // удалили спиннер
-                } else {
-                    showThanksModal(message.failure);
-                };
-
             });
 
+            fetch('server1.php', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(object)
+            }).then(data => data.text())
+            .then(data => {
+                console.log(data); 
+                showThanksModal(message.succes);
+                statusMessage.remove() // удалили спиннер
+            }).catch(() => {
+                showThanksModal(message.failure);
+            }).finally(() => {
+                form.reset(); // валидация. Или можно просто перебрать все инпуты и почистить их value
+            });
 
         });
     };
@@ -316,8 +307,8 @@ window.addEventListener('DOMContentLoaded', () => {
             prevModalDialog.classList.add('show')
             prevModalDialog.classList.remove('hide')
             closeModal();
-        }, 4000);
-    }
+        }, 2500);
+    };
 
 });
 
